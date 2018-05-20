@@ -131,7 +131,7 @@ void myplugin() {
 
 	//do job
 	int doc_len = ::SendMessage(curScintilla, SCI_GETLENGTH, NULL, NULL);
-	//::MessageBox(curScintilla, int2LPTSRT(doc_len), TEXT("doc_len"), MB_OK);
+	::MessageBox(curScintilla, int2LPTSRT(doc_len), TEXT("doc_len"), MB_OK);
 
 	//SCI_GETSELTEXT
 	char* seltext = new char;
@@ -141,48 +141,6 @@ void myplugin() {
 	else
 		g_seltext = seltext;
 	//char* str_of = "of";
-	//if (strcmp(seltext, "of") == 0)
-	//	::MessageBox(NULL, TEXT("equal"), TEXT("Notepad++ Plugin Template"), MB_OK);
-	//else
-	//	::MessageBox(NULL, TEXT("Not equal"), TEXT("Notepad++ Plugin Template"), MB_OK);
-
-	//LPTSTR lpts seltext;
-	//::MessageBox(curScintilla, charp2LPTSRT(seltext), TEXT("seltext"), MB_OK);
-
-	//::SendMessage(curScintilla, SCI_GOTOLINE, 67, NULL);
-	//::SendMessage(curScintilla, SCI_GETSELTEXT,NULL, )
-
-	//Searching
-
-	//SCI_FINDTEXT
-	::MessageBox(curScintilla, TEXT("SCI_FINDTEXT"), TEXT("SCI_FINDTEXT"), MB_OK);
-	int curpos = (int)::SendMessage(curScintilla, SCI_GETCURRENTPOS, NULL, NULL);
-	CharacterRange rc;
-	rc.cpMin = curpos;
-	rc.cpMax = doc_len;
-
-	TextToFind *ft = new TextToFind;
-	ft->chrg = rc;
-	ft->lpstrText = seltext;
-
-	int pos = (int)::SendMessage(curScintilla, SCI_FINDTEXT, SCFIND_MATCHCASE, (LPARAM)ft);
-	int line = (int)::SendMessage(curScintilla, SCI_LINEFROMPOSITION, pos, NULL);
-
-	//::SendMessage(curScintilla, SCI_GOTOLINE, line, NULL);
-	//::SendMessage(curScintilla, SCI_GOTOPOS, pos, NULL);
-	//::SendMessage(curScintilla, SCI_SETSEL, pos+strlen(seltext), pos);
-	int anc = pos + strlen(seltext);
-	//::SendMessage(curScintilla, SCI_SETSEL, anc, pos);
-	::SendMessage(curScintilla, SCI_SETSEL, pos, anc);
-
-	//char desc[200];
-	wchar_t desc[200];
-	//wchar_t format
-	swprintf(desc, 200, TEXT("curpos: %d. findpos: %d. line: %d"), curpos, pos, line);
-	::MessageBox(curScintilla, desc, TEXT("desc"), MB_OK);
-
-	delete ft;
-	//delete rc;
 }
 
 void myplugin1() {
@@ -228,14 +186,21 @@ void SearchText(bool isSearchForward) {
 	ft->lpstrText = seltext;
 
 	int pos = (int)::SendMessage(curScintilla, SCI_FINDTEXT, SCFIND_MATCHCASE, (LPARAM)ft);
-	int line = (int)::SendMessage(curScintilla, SCI_LINEFROMPOSITION, pos, NULL);
+	int line = 0;
 
-	//::SendMessage(curScintilla, SCI_GOTOLINE, line, NULL);
-	//::SendMessage(curScintilla, SCI_GOTOPOS, pos, NULL);
-	//::SendMessage(curScintilla, SCI_SETSEL, pos+strlen(seltext), pos);
-	int anc = pos + strlen(seltext);
-	//::SendMessage(curScintilla, SCI_SETSEL, anc, pos);
-	::SendMessage(curScintilla, SCI_SETSEL, pos, anc);
+	if (pos != -1) {
+		line = (int)::SendMessage(curScintilla, SCI_LINEFROMPOSITION, pos, NULL);
+
+		//::SendMessage(curScintilla, SCI_GOTOLINE, line, NULL);
+		//::SendMessage(curScintilla, SCI_GOTOPOS, pos, NULL);
+		//::SendMessage(curScintilla, SCI_SETSEL, pos+strlen(seltext), pos);
+		int anc = pos + strlen(seltext);
+		//::SendMessage(curScintilla, SCI_SETSEL, anc, pos);
+		::SendMessage(curScintilla, SCI_SETSEL, pos, anc);
+	}
+	else
+		::MessageBox(curScintilla, TEXT("Notfound"), TEXT("Alter"), MB_OK);
+
 
 	//char desc[200];
 	wchar_t desc[200];
